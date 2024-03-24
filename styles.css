@@ -1,0 +1,20 @@
+.game-wrapper{
+  width: 450px;
+  height: 450px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  clip-path: inset(3px);
+}
+
+:disabled{
+  color: black;
+  background-color: transparent;
+  border: initial;
+  border: 3px solid black;
+}
+button{
+  border: 3px solid black;
+  font-size: 3rem;
+  background-color: transparent;
+}

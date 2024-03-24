@@ -54,6 +54,19 @@ function gameBoard(){
           break;
       }
     }
+    // check diagonals
+    if(
+      cBoard[0][0] === cBoard [1][1] &&
+      cBoard[0][0] === cBoard [2][2] &&
+      cBoard[0][0] !== undefined
+    ) winner = true;
+
+    else if(
+      cBoard[0][2] === cBoard [1][1] &&
+      cBoard[0][2] === cBoard [2][0] &&
+      cBoard[0][2] !== undefined
+    ) winner = true;
+     
     return winner;
   }
 
@@ -114,7 +127,60 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
 
   printNewround();
 
-  return {playRound};
+  //need a reset game function***
+
+  return {playRound, getActivePlayer};
 }
 
-const game = gameController()
+
+function displayController(){
+
+  const game = gameController();
+
+  //cache DOM
+  const gameWrapper = document.querySelector('.game-wrapper');
+  // const resetButton = gameWrapper.querySelector();
+
+
+  createBoard();
+  
+
+  function createBoard() {
+    for(let i = 0; i < 3; i++){
+      for (let j = 0; j < 3; j++){
+
+        const button = document.createElement('button');
+
+        button.setAttribute('pos', `${i}${j}`);
+        gameWrapper.appendChild(button);
+
+        //bind events to each cell
+        button.addEventListener('click',fillCell);
+      }
+    } 
+  }
+
+  function fillCell(e){
+    //fills the cell and plays round
+    e.target.innerHTML = game.getActivePlayer().token;
+    const pos = e.target.getAttribute('pos');
+    game.playRound(pos[0], pos[1]);
+
+    //disable the button after its clicked once
+    e.target.setAttribute('disabled','');
+  }
+  
+
+
+  //update the display who the current player is
+
+
+  //have a screen to show the winner
+
+  // after winner buttons cannot be pressed;
+
+  // reset button
+
+  // input the name of the players
+}
+displayController();
