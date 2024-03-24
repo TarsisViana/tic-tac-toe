@@ -1,4 +1,4 @@
-const gameBoard = (function(){
+function gameBoard(){
 
   const rows = 3;
   const columns = 3;
@@ -29,18 +29,9 @@ const gameBoard = (function(){
     board[row][collumn].getPlay(playerToken);
   }
 
-  function cell(){
-    let value = undefined;
-  
-    function getPlay (playerToken) { 
-      value = playerToken;
-    }
-  
-    const getValue = () => value;
-    return {getPlay, getValue}
-  }
 
-  const checkForWinner = () =>{
+
+  const checkForWinner = () => {
     //short for currentBoard
     const cBoard = board.map((row) => row.map((cell) => cell.getValue()))
     let winner = false;
@@ -63,17 +54,30 @@ const gameBoard = (function(){
           break;
       }
     }
-
     return winner;
   }
-  
-  return {print, getBoard, makePlay, checkForWinner}
-})();
 
+  return {print, getBoard, makePlay, checkForWinner}
+
+};
+
+
+//the cell has a private variable "value" and the functions to change or get the value.
+function cell(){
+  let value = undefined;
+
+  function getPlay (playerToken) { 
+    value = playerToken;
+  }
+  const getValue = () => value;
+  return {getPlay, getValue}
+}
 
 
 function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
 
+  //inicialize gameBoard
+  const board = gameBoard();
 
   const players = [
     {name: playerOne, token: 'x'},
@@ -89,15 +93,15 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
   const getActivePlayer = () => activePlayer;
 
   const printNewround = () => {
-    console.log(gameBoard.print());
+    console.log(board.print());
     console.log(`${activePlayer.name}'s turn...` );
   }
 
   const playRound = (row,column) => {
-    gameBoard.makePlay(activePlayer.token, row, column)
+    board.makePlay(activePlayer.token, row, column)
     let winner;
     //check for a winner after every play
-    winner = gameBoard.checkForWinner(activePlayer);
+    winner = board.checkForWinner(activePlayer);
     if(!winner){
       switchPlayer();
       printNewround();
