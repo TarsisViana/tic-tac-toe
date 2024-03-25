@@ -142,6 +142,7 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
     board.resetBoard();
     activePlayer = players[0];
     winner = false;
+    counter = 0;
   }
   
   function getWinner() { 
@@ -213,6 +214,7 @@ function displayController(){
     form.elements[0].removeAttribute('disabled');
     form.elements[1].removeAttribute('disabled');
     form.elements[2].removeAttribute('disabled');
+    msg.textContent = `It's ${game.getActivePlayer().name}'s turn`;
   }
 
 
