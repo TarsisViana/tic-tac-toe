@@ -114,6 +114,7 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
   
   let activePlayer = players[0];
   let winner = false;
+  let counter = 0;
 
   const switchPlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -125,12 +126,12 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
   const playRound = (row,column) => {
     board.makePlay(activePlayer.token, row, column)
     
-    
     //check for a winner after every play
     winner = board.checkForWinner(activePlayer);
     if(!winner){
       switchPlayer();
       board.print();
+      counter++;
       return;
     }
     console.log(`${activePlayer.name} is the winner!`)
@@ -147,7 +148,10 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
     return winner;
   }
 
-  return {playRound, getActivePlayer, resetGame, getWinner};
+ function getCounter(){
+  return counter;
+ }
+  return {playRound, getActivePlayer, resetGame, getWinner, getCounter};
 }
 
 
@@ -230,6 +234,9 @@ function displayController(){
       msg.textContent = `${game.getActivePlayer().name} wins!`;
       disableBtns();
     }
+    if(game.getCounter() == 9){
+      msg.textContent = `It's a Draw`;
+    }
   }
 
   function disableForm(){
@@ -244,16 +251,6 @@ function displayController(){
       button.setAttribute('disabled','');
     })
   }
-  //update the display who the current player is
-
-
-  //have a screen to show the winner
-
-  // after winner buttons cannot be pressed;
-
-  // reset button
-
-  // input the name of the players
 }
 
 displayController();
