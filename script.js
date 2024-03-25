@@ -66,11 +66,27 @@ function gameBoard(){
       cBoard[0][2] === cBoard [2][0] &&
       cBoard[0][2] !== undefined
     ) winner = true;
-     
+      
+
+    // need to check for draws
+    // if every buttons has been clicked and
+    // winner = false than its a draw  
+
+
     return winner;
   }
 
-  return {print, getBoard, makePlay, checkForWinner}
+  function resetBoard(){
+    for(let i = 0; i < rows; i++){
+      board[i] = [];
+  
+      for(let j = 0; j < columns; j++){
+        board[i].push(cell());
+      }
+    }
+  }
+
+  return {print, getBoard, makePlay, checkForWinner, resetBoard}
 
 };
 
@@ -91,13 +107,13 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
 
   //inicialize gameBoard
   const board = gameBoard();
-
   const players = [
     {name: playerOne, token: 'x'},
     {name: playerTwo, token: 'o'}
   ];
-
+  
   let activePlayer = players[0];
+  let winner = false;
 
   const switchPlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -105,50 +121,58 @@ function gameController(playerOne = 'Player One',playerTwo = 'Player Two'){
 
   const getActivePlayer = () => activePlayer;
 
-  const printNewround = () => {
-    console.log(board.print());
-    console.log(`${activePlayer.name}'s turn...` );
-  }
-
+  
   const playRound = (row,column) => {
     board.makePlay(activePlayer.token, row, column)
-    let winner;
+    
+    
     //check for a winner after every play
     winner = board.checkForWinner(activePlayer);
     if(!winner){
       switchPlayer();
-      printNewround();
+      board.print();
       return;
     }
-    printNewround();
     console.log(`${activePlayer.name} is the winner!`)
+    
   }
 
+  function resetGame(){
+    board.resetBoard();
+    activePlayer = players[0];
+    winner = false;
+  }
+  
+  function getWinner() { 
+    return winner;
+  }
 
-  printNewround();
-
-  //need a reset game function***
-
-  return {playRound, getActivePlayer};
+  return {playRound, getActivePlayer, resetGame, getWinner};
 }
 
 
 function displayController(){
 
-  const game = gameController();
+  let game = {};
 
-  //cache DOM
+  //cache DOM-
   const gameWrapper = document.querySelector('.game-wrapper');
-  // const resetButton = gameWrapper.querySelector();
+  const resetBtn = document.querySelector('.reset');
+  const form = document.querySelector('form');
+  const msg = document.querySelector('p.msg')
+
+  //bind events
+  form.addEventListener('submit', startGame);
+  resetBtn.addEventListener('click', reset);
 
 
-  createBoard();
   
-
+  
   function createBoard() {
+    gameWrapper.textContent = '';
+
     for(let i = 0; i < 3; i++){
       for (let j = 0; j < 3; j++){
-
         const button = document.createElement('button');
 
         button.setAttribute('pos', `${i}${j}`);
@@ -165,13 +189,61 @@ function displayController(){
     e.target.innerHTML = game.getActivePlayer().token;
     const pos = e.target.getAttribute('pos');
     game.playRound(pos[0], pos[1]);
+    msg.textContent = `It's ${game.getActivePlayer().name}'s turn`;
 
     //disable the button after its clicked once
     e.target.setAttribute('disabled','');
+
+    checkEnd();
+    disableForm();
   }
   
 
+  
+  
+  function reset(){
+    game.resetGame();
+    gameWrapper.textContent = '';
+    createBoard();
+    form.reset();
+    form.elements[0].removeAttribute('disabled');
+    form.elements[1].removeAttribute('disabled');
+    form.elements[2].removeAttribute('disabled');
+  }
 
+
+  function startGame(){
+    let player1 = form.elements[0].value;
+    let player2 = form.elements[1].value;
+    if(player1 !== '' && player2 !== '') game = gameController(player1, player2);  
+    else game = gameController(); 
+    createBoard();
+    disableForm();
+
+    msg.textContent = `It's ${game.getActivePlayer().name}'s turn`;
+  }
+
+
+  function checkEnd(){
+    console.log(game.getWinner())
+    if(game.getWinner()){
+      msg.textContent = `${game.getActivePlayer().name} wins!`;
+      disableBtns();
+    }
+  }
+
+  function disableForm(){
+    form.elements[0].setAttribute('disabled', '');
+    form.elements[1].setAttribute('disabled', '');
+    form.elements[2].setAttribute('disabled', '');
+  }
+
+  function disableBtns(){
+    const btn = gameWrapper.querySelectorAll('button');
+    btn.forEach((button)=>{
+      button.setAttribute('disabled','');
+    })
+  }
   //update the display who the current player is
 
 
@@ -183,4 +255,5 @@ function displayController(){
 
   // input the name of the players
 }
+
 displayController();

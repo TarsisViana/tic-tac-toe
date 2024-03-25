@@ -1,13 +1,56 @@
+body{
+  width: 800px;
+  margin: auto;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1{
+  font-size: 3rem;
+}
+
+div.form-wrapper{
+  justify-content: center;
+}
+
+form{
+  display: grid;
+  width: 400px;
+  grid-template-columns: auto 300px;
+  gap: 16px;
+  margin: auto;
+
+}
+
+form label{
+  text-align: left;
+}
+
+form button{
+  grid-column: span 2;
+  margin: 16px;
+  font-size: 2rem;
+}
+
+div.msg-wrapper{
+  margin: 32px;
+}
+
+p.msg{
+  font-size: 2rem;
+}
+
 .game-wrapper{
   width: 450px;
   height: 450px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
-  clip-path: inset(3px);
+  clip-path: inset(4px);
+  margin: 40px auto;
 }
 
-:disabled{
+button:disabled{
   color: black;
   background-color: transparent;
   border: initial;
@@ -15,6 +58,10 @@
 }
 button{
   border: 3px solid black;
-  font-size: 3rem;
+  font-size: 4rem;
   background-color: transparent;
+}
+
+button.reset{
+  font-size: 2rem;
 }
